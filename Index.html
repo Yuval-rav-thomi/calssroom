@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ניהול נוכחות - י"א 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .slide-in {
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <main class="max-w-3xl mx-auto w-full p-4 md:p-6 pb-24 flex-1">
+        
+        <!-- Header -->
+        <header class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6 text-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-indigo-600 mb-1">ניהול נוכחות - י"א 2</h1>
+            <p class="text-slate-500 text-sm">מערכת שעות חכמה ושמירה אוטומטית</p>
+        </header>
+
+        <!-- VIEW 1: Schedule View -->
+        <div id="view-schedule" class="transition-all duration-300">
+            <!-- Date Picker -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="w-full sm:w-auto flex-1">
+                    <label for="main-date-picker" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">בחר תאריך לימודים</label>
+                    <input type="date" id="main-date-picker" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-lg font-medium text-slate-700 cursor-pointer">
+                </div>
+                <div class="bg-indigo-50 rounded-xl p-3 w-full sm:w-auto text-center border border-indigo-100">
+                    <span id="day-title" class="text-indigo-700 font-bold text-lg">יום ראשון</span>
+                </div>
+            </div>
+
+            <!-- Schedule List -->
+            <div id="daily-schedule-container" class="space-y-3">
+                <!-- Cards injected here -->
+            </div>
+        </div>
+
+        <!-- VIEW 2: Attendance View (Hidden by default) -->
+        <div id="view-attendance" class="hidden transition-all duration-300 slide-in">
+            
+            <button onclick="goBackToSchedule()" class="mb-5 flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium transition-colors bg-white shadow-sm border border-slate-100 px-4 py-2.5 rounded-xl w-fit active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                חזור למערכת
+            </button>
+
+            <!-- Lesson Info & Group Selector -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+                <div class="bg-indigo-600 p-4 text-white flex justify-between items-center">
+                    <h2 id="attendance-lesson-title" class="text-lg font-bold">שיעור 1</h2>
+                    <span id="attendance-date-display" class="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm"></span>
+                </div>
+                
+                <div class="p-5 bg-white">
+                    <label for="group-selector" class="block text-sm font-semibold text-slate-600 mb-2">באיזה שיעור אתה כרגע?</label>
+                    <select id="group-selector" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium text-slate-700 cursor-pointer">
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Student List -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+                <div class="bg-slate-50 px-5 py-3.5 border-b border-slate-100 flex justify-between items-center">
+                    <h2 class="font-bold text-slate-700">רשימת תלמידים</h2>
+                    <span id="student-count" class="text-xs bg-indigo-100 text-indigo-700 py-1.5 px-3 rounded-full font-bold shadow-sm">0 תלמידים</span>
+                </div>
+                <div id="students-container" class="divide-y divide-slate-100 max-h-[55vh] overflow-y-auto">
+                    <!-- Students injected here -->
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button id="copy-btn" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-all active:scale-95 flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    העתק דו"ח יומי
+                </button>
+                <button id="reset-btn" class="bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold py-3.5 px-4 rounded-xl transition-all active:scale-95 shadow-sm">
+                    נקה רישום
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-5 py-3.5 rounded-xl shadow-2xl transition-all duration-300 opacity-0 pointer-events-none flex items-center gap-3 z-50 font-medium">
+        <svg id="toast-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span id="toast-msg">נשמר בענן</span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'attendance-app-ya2';
+        let firebaseConfig = {};
+        try {
+            firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        } catch (e) {
+            console.warn("Using default local state (Firebase not configured)");
+        }
+
+        let app, db, auth, userId;
+        let isOnline = Object.keys(firebaseConfig).length > 0;
+        
+        if (isOnline) {
+             app = initializeApp(firebaseConfig);
+             db = getFirestore(app);
+             auth = getAuth(app);
+        }
+
+        // --- Data ---
+        const rawStudentsData = [
+            { id: 1, last: "אביטל", first: "שוהם", groups: ["מגמה: אלקטרוניקה", "אנגלית: 5 יחידות", "מגמה: פיזיקה 5 יחידות", "מתמטיקה: 5 יחידות"] },
+            { id: 2, last: "אוחנה", first: "נועה", groups: ["מגמה: אומנות", "אנגלית: 3 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 3, last: "ביתן", first: "נריה", groups: ["מגמה: תיאטרון", "אנגלית: 3 יחידות", "מתמטיקה: 4 יחידות"] },
+            { id: 4, last: "ביתן", first: "תהל", groups: ["מגמה: תיאטרון", "אנגלית: 4/5 יחידות", "מגמה: ביולוגיה 5 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 5, last: "בן לולו", first: "יהלי", groups: ["מגמה: אומנות", "אנגלית: 3 יחידות", "מתמטיקה: 4 יחידות"] },
+            { id: 6, last: "גאייב", first: "פיודור", groups: ["מגמה: אומנות", "אנגלית: 3 יחידות", "מגמה: ביולוגיה 5 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 7, last: "חורי", first: "אליהו יהוידע", groups: ["מגמה: אלקטרוניקה", "אנגלית: 4/5 יחידות", "מגמה: פיזיקה 5 יחידות", "מתמטיקה: 5 יחידות"] },
+            { id: 8, last: "יצחק", first: "פלג", groups: ["מגמה: אומנות", "אנגלית: 3 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 9, last: "לוי", first: "יהונתן", groups: ["מגמה: אלקטרוניקה", "אנגלית: 4/5 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 10, last: "ממן גרוני", first: "שירה", groups: ["מגמה: חילוץ והצלה", "אנגלית: 3 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 11, last: "ממן", first: "לורן שרה", groups: ["מגמה: אומנות", "אנגלית: 4/5 יחידות", "מגמה: ביולוגיה 5 יחידות", "מתמטיקה: 4 יחידות"] },
+            { id: 12, last: "סבאן", first: "טליה", groups: ["מגמה: אלקטרוניקה", "אנגלית: 5 יחידות", "מגמה: ביולוגיה 5 יחידות", "מתמטיקה: 5 יחידות"] },
+            { id: 13, last: "עזריאלי", first: "טליה", groups: ["מגמה: אומנות", "אנגלית: 4/5 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 14, last: "פדורוב", first: "דוד", groups: ["מגמה: אומנות", "אנגלית: 5 יחידות", "מגמה: פיזיקה 5 יחידות", "מתמטיקה: 4 יחידות"] },
+            { id: 15, last: "פרידמן", first: "ליעד", groups: ["מגמה: אלקטרוניקה", "אנגלית: 5 יחידות", "מגמה: ביולוגיה 5 יחידות", "מתמטיקה: 5 יחידות"] },
+            { id: 16, last: "קדוש", first: "נועה", groups: ["מגמה: אלקטרוניקה", "אנגלית: 4/5 יחידות", "מגמה: ביולוגיה 5 יחידות", "מתמטיקה: 5 יחידות"] },
+            { id: 17, last: "שיש", first: "יהלי אליהו", groups: ["מגמה: תיאטרון", "אנגלית: 5 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 18, last: "שפירא", first: "עופרי", groups: ["מגמה: אלקטרוניקה", "אנגלית: 4/5 יחידות", "מגמה: פיזיקה 5 יחידות", "מתמטיקה: 4 יחידות"] },
+            { id: 19, last: "תורג'מן", first: "שירה", groups: ["מגמה: אלקטרוניקה", "אנגלית: 5 יחידות", "מגמה: ביולוגיה 5 יחידות", "מתמטיקה: 4 יחידות"] },
+            { id: 20, last: "כמיסה", first: "איתמר", groups: ["מגמה: אומנות", "אנגלית: 4/5 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 21, last: "כהן", first: "ידידיה", groups: ["מגמה: אומנות", "אנגלית: 4/5 יחידות", "מתמטיקה: 3 יחידות"] },
+            { id: 22, last: "זייד", first: "איתן", groups: ["מגמה: תיאטרון", "אנגלית: 3 יחידות", "מתמטיקה: 3 יחידות"] }
+        ];
+
+        const studentsData = rawStudentsData.map(s => ({
+            id: s.id,
+            name: s.first + " " + s.last,
+            lastName: s.last,
+            groups: s.groups
+        })).sort((a, b) => a.lastName.localeCompare(b.lastName, 'he'));
+
+        const lessonTimes = {
+            1: "08:25-09:10", 2: "09:10-09:55", 3: "10:15-11:00", 4: "11:05-11:50",
+            5: "12:10-12:55", 6: "13:00-13:35", 7: "14:00-14:40", 8: "14:40-15:20"
+        };
+        const daysHebrew = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+
+        const englishGroups = ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"];
+        const mathGroups = ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"];
+        const mathGroups45 = ["מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"];
+        const artRescueElec = ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה"];
+        const artRescueElecTheater = ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"];
+        const bioPhysics = ["מגמה: ביולוגיה 5 יחידות", "מגמה: פיזיקה 5 יחידות"];
+        const bioPhysicsTanakh = ["מגמה: ביולוגיה 5 יחידות", "מגמה: פיזיקה 5 יחידות", "מגמה: תנ״ך מוגבר"];
+
+        const schedule = {
+            0: { 1: ["כל הכיתה - לשון"], 2: ["כל הכיתה - לשון"], 3: englishGroups, 4: englishGroups, 5: mathGroups, 6: mathGroups, 7: ["כל הכיתה - היסטוריה"], 8: ["כל הכיתה - היסטוריה"] },
+            1: { 1: mathGroups45, 2: mathGroups, 3: ["כל הכיתה - חינוך"], 4: ["כל הכיתה - היסטוריה"], 5: ["כל הכיתה - היסטוריה"], 6: ["כל הכיתה - חנ״ג"], 7: artRescueElec, 8: artRescueElec },
+            2: { 1: bioPhysics, 2: bioPhysics, 3: ["כל הכיתה - היסטוריה"], 4: ["כל הכיתה - היסטוריה"], 5: englishGroups, 6: englishGroups, 7: ["כל הכיתה - לשון"], 8: ["כל הכיתה - לשון"] },
+            3: { 1: ["כל הכיתה - היסטוריה"], 2: ["כל הכיתה - היסטוריה"], 3: ["כל הכיתה - לשון"], 4: ["כל הכיתה - לשון"], 5: artRescueElecTheater, 6: artRescueElecTheater, 7: bioPhysicsTanakh, 8: bioPhysicsTanakh },
+            4: { 1: mathGroups, 2: mathGroups, 3: ["כל הכיתה - תנ״ך"], 4: ["כל הכיתה - תנ״ך"], 5: ["כל הכיתה - לשון"], 6: ["כל הכיתה - לשון"], 7: artRescueElecTheater, 8: artRescueElecTheater },
+            5: {}, 6: {}
+        };
+
+        let currentGroup = "";
+        let currentDate = new Date().toISOString().split('T')[0];
+        let currentLesson = "1";
+        let attendanceRecord = {}; 
+
+        // --- DOM Elements ---
+        const viewSchedule = document.getElementById('view-schedule');
+        const viewAttendance = document.getElementById('view-attendance');
+        const mainDatePicker = document.getElementById('main-date-picker');
+        const dailyScheduleContainer = document.getElementById('daily-schedule-container');
+        const dayTitle = document.getElementById('day-title');
+        
+        const attendanceLessonTitle = document.getElementById('attendance-lesson-title');
+        const attendanceDateDisplay = document.getElementById('attendance-date-display');
+        const groupSelector = document.getElementById('group-selector');
+        const studentsContainer = document.getElementById('students-container');
+        const studentCount = document.getElementById('student-count');
+
+        // --- STREAMING_CHUNK: App Start ---
+        async function init() {
+            if (isOnline) {
+                 const creds = await signInAnonymously(auth);
+                 userId = creds.user.uid;
+                 await loadDataFromCloud();
+            } else {
+                 loadLocalData();
+            }
+
+            mainDatePicker.value = currentDate;
+            
+            mainDatePicker.addEventListener('change', async (e) => {
+                currentDate = e.target.value;
+                if(isOnline) await loadDataFromCloud();
+                renderSchedule();
+            });
+
+            groupSelector.addEventListener('change', (e) => {
+                currentGroup = e.target.value;
+                renderStudents();
+            });
+
+            document.getElementById('copy-btn').addEventListener('click', generateAndCopyReport);
+            document.getElementById('reset-btn').addEventListener('click', clearCurrentRecord);
+
+            renderSchedule();
+        }
+
+        // --- STREAMING_CHUNK: Data Syncing ---
+        async function loadDataFromCloud() {
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'appData', 'attendance');
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    attendanceRecord = docSnap.data().records || {};
+                }
+            } catch (error) {
+                console.error("Cloud load error:", error);
+            }
+        }
+
+        async function saveDataToCloud() {
+            if(!isOnline || !userId) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'appData', 'attendance');
+                await setDoc(docRef, { records: attendanceRecord }, { merge: true });
+                showToast("נשמר בענן", false, false, true);
+            } catch (error) {
+                console.error("Cloud save error:", error);
+            }
+        }
+        
+        function saveLocalData() {
+            localStorage.setItem('attendanceRecord', JSON.stringify(attendanceRecord));
+        }
+        function loadLocalData() {
+            const saved = localStorage.getItem('attendanceRecord');
+            if (saved) attendanceRecord = JSON.parse(saved);
+        }
+
+        // --- STREAMING_CHUNK: Rendering ---
+        window.goBackToSchedule = function() {
+            viewAttendance.classList.add('hidden');
+            viewSchedule.classList.remove('hidden');
+            renderSchedule();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.openLesson = function(lessonNum) {
+            currentLesson = lessonNum;
+            const dateObj = new Date(currentDate);
+            
+            attendanceLessonTitle.textContent = `שיעור ${lessonNum} (${lessonTimes[lessonNum]})`;
+            attendanceDateDisplay.textContent = dateObj.toLocaleDateString('he-IL');
+            
+            const dayNum = dateObj.getDay();
+            const groupsForLesson = schedule[dayNum][lessonNum];
+            
+            groupSelector.innerHTML = '';
+            groupsForLesson.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group;
+                option.textContent = group;
+                groupSelector.appendChild(option);
+            });
+            
+            currentGroup = groupsForLesson[0];
+            renderStudents();
+
+            viewSchedule.classList.add('hidden');
+            viewAttendance.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderSchedule() {
+            const date = new Date(currentDate);
+            const dayNum = date.getDay(); 
+            dayTitle.textContent = `יום ${daysHebrew[dayNum]}`;
+            dailyScheduleContainer.innerHTML = '';
+
+            const daySchedule = schedule[dayNum];
+
+            if (!daySchedule || Object.keys(daySchedule).length === 0) {
+                dailyScheduleContainer.innerHTML = `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm">
+                        <span class="text-5xl block mb-4">🏖️</span>
+                        <h3 class="text-xl font-bold text-slate-700">אין לימודים היום</h3>
+                    </div>`;
+                return;
+            }
+
+            for (let i = 1; i <= 8; i++) {
+                if (daySchedule[i]) {
+                    const groups = daySchedule[i];
+                    const recordKey = `${currentDate}_${i}`;
+                    
+                    let hasData = false;
+                    if (attendanceRecord[recordKey] && Object.keys(attendanceRecord[recordKey]).length > 0) {
+                        hasData = true;
+                    }
+
+                    let displayGroupsText = groups.join(' • ').replace(/כל הכיתה - /g, '');
+                    if(displayGroupsText.length > 50) displayGroupsText = displayGroupsText.substring(0, 50) + "...";
+                    
+                    const card = document.createElement('div');
+                    card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-200 hover:border-indigo-400 hover:shadow-md transition-all cursor-pointer flex justify-between items-center group active:scale-[0.98]";
+                    card.onclick = () => openLesson(i);
+                    
+                    card.innerHTML = `
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-1.5">
+                                <h3 class="font-bold text-slate-800 text-lg">שיעור ${i}</h3>
+                                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md tracking-wide">${lessonTimes[i]}</span>
+                            </div>
+                            <p class="text-slate-500 text-sm font-medium pr-1">${displayGroupsText}</p>
+                        </div>
+                        <div class="flex flex-col items-end gap-2">
+                            ${hasData ? `<span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm border border-emerald-200"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> הוזן</span>` : ''}
+                            <button class="text-slate-300 group-hover:text-indigo-600 transition-colors bg-slate-50 group-hover:bg-indigo-50 p-2 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                        </div>
+                    `;
+                    dailyScheduleContainer.appendChild(card);
+                }
+            }
+        }
+
+        // --- STREAMING_CHUNK: Logic ---
+        function renderStudents() {
+            studentsContainer.innerHTML = '';
+            let filteredStudents = [];
+            if (currentGroup.startsWith('כל הכיתה')) {
+                filteredStudents = [...studentsData]; 
+            } else {
+                filteredStudents = studentsData.filter(s => s.groups && s.groups.includes(currentGroup));
+            }
+            
+            studentCount.textContent = `${filteredStudents.length} תלמידים`;
+
+            if (filteredStudents.length === 0) {
+                studentsContainer.innerHTML = `<div class="p-10 text-center text-slate-500">אין תלמידים רשומים לקבוצה זו.</div>`;
+                return;
+            }
+
+            const recordKey = `${currentDate}_${currentLesson}`;
+            if (!attendanceRecord[recordKey]) attendanceRecord[recordKey] = {};
+
+            filteredStudents.forEach(student => {
+                const status = attendanceRecord[recordKey][student.id] || 'none';
+                const studentRow = document.createElement('div');
+                studentRow.className = "flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 hover:bg-slate-50 transition-colors gap-3 sm:gap-0";
+                
+                studentRow.innerHTML = `
+                    <div class="font-bold text-slate-800 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold">${student.name.charAt(0)}</div>
+                        ${student.name}
+                    </div>
+                    <div class="flex bg-slate-100 rounded-lg p-1 gap-1 w-full sm:w-[260px]">
+                        <button onclick="setStatus(${student.id}, 'present')" class="flex-1 py-2 px-3 text-sm font-bold rounded-md transition-all ${status === 'present' ? 'bg-white shadow-sm text-emerald-600 ring-1 ring-emerald-200' : 'text-slate-500 hover:bg-slate-200'}">נוכח</button>
+                        <button onclick="setStatus(${student.id}, 'late')" class="flex-1 py-2 px-3 text-sm font-bold rounded-md transition-all ${status === 'late' ? 'bg-white shadow-sm text-amber-600 ring-1 ring-amber-200' : 'text-slate-500 hover:bg-slate-200'}">איחר</button>
+                        <button onclick="setStatus(${student.id}, 'absent')" class="flex-1 py-2 px-3 text-sm font-bold rounded-md transition-all ${status === 'absent' ? 'bg-white shadow-sm text-rose-600 ring-1 ring-rose-200' : 'text-slate-500 hover:bg-slate-200'}">נעדר</button>
+                    </div>
+                `;
+                studentsContainer.appendChild(studentRow);
+            });
+        }
+
+        window.setStatus = function(studentId, status) {
+            const recordKey = `${currentDate}_${currentLesson}`;
+            if (!attendanceRecord[recordKey]) attendanceRecord[recordKey] = {};
+            
+            if (attendanceRecord[recordKey][studentId] === status) {
+                delete attendanceRecord[recordKey][studentId];
+            } else {
+                attendanceRecord[recordKey][studentId] = status;
+            }
+            
+            if(!isOnline) saveLocalData();
+            renderStudents();
+            
+            // Debounced cloud save
+            clearTimeout(window.saveTimeout);
+            window.saveTimeout = setTimeout(() => { saveDataToCloud(); }, 1500);
+        };
+
+        function clearCurrentRecord() {
+            const recordKey = `${currentDate}_${currentLesson}`;
+            if (attendanceRecord[recordKey]) {
+                let groupStudents = [];
+                if (currentGroup.startsWith('כל הכיתה')) {
+                    groupStudents = studentsData.map(s => s.id);
+                } else {
+                    groupStudents = studentsData.filter(s => s.groups && s.groups.includes(currentGroup)).map(s => s.id);
+                }
+                groupStudents.forEach(id => delete attendanceRecord[recordKey][id]);
+                
+                if(!isOnline) saveLocalData();
+                renderStudents();
+                saveDataToCloud();
+                showToast("הרישום אופס");
+            }
+        }
+
+        function generateAndCopyReport() {
+            let filteredStudents = currentGroup.startsWith('כל הכיתה') ? [...studentsData] : studentsData.filter(s => s.groups && s.groups.includes(currentGroup));
+            const records = attendanceRecord[`${currentDate}_${currentLesson}`] || {};
+            
+            const present = [], late = [], absent = [], unknown = [];
+            filteredStudents.forEach(s => {
+                const status = records[s.id];
+                if (status === 'present') present.push(s.name);
+                else if (status === 'late') late.push(s.name);
+                else if (status === 'absent') absent.push(s.name);
+                else unknown.push(s.name);
+            });
+
+            const dateStr = new Date(currentDate).toLocaleDateString('he-IL');
+            let report = `דוח נוכחות - ${currentGroup.replace('כל הכיתה - ', '')}\nתאריך: ${dateStr} | שיעור ${currentLesson}\n-----------------------------------\n`;
+            
+            if (present.length > 0) report += `✅ נוכחים (${present.length}):\n${present.join(', ')}\n\n`;
+            if (late.length > 0) report += `⏳ איחורים (${late.length}):\n${late.join(', ')}\n\n`;
+            if (absent.length > 0) report += `❌ נעדרים (${absent.length}):\n${absent.join(', ')}\n\n`;
+            if (unknown.length > 0) report += `❓ חסר סטטוס:\n${unknown.join(', ')}\n`;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = report.trim();
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast("הדוח הועתק בהצלחה!");
+            } catch (err) {
+                showToast("שגיאה בהעתקה", true);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(message, isError = false, isLoading = false, isSilent = false) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = message;
+            
+            if(isSilent) {
+                 toast.className = "fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full shadow-lg transition-all duration-300 flex items-center gap-2 z-50 text-xs font-bold slide-in opacity-80";
+                 document.getElementById('toast-icon').innerHTML = `<path d="M21 12a9 9 0 1 1-6.219-8.56"></path>`;
+            } else {
+                 toast.className = "fixed top-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-5 py-3.5 rounded-xl shadow-2xl transition-all duration-300 flex items-center gap-3 z-50 font-bold slide-in";
+                 document.getElementById('toast-icon').innerHTML = isError ? `<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>` : `<polyline points="20 6 9 17 4 12"></polyline>`;
+            }
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-4');
+                setTimeout(() => toast.classList.add('pointer-events-none'), 300);
+            }, 2500);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
