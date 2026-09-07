@@ -111,7 +111,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'attendance-app-ya2';
@@ -208,9 +208,19 @@
         // --- STREAMING_CHUNK: App Start ---
         async function init() {
             if (isOnline) {
-                 const creds = await signInAnonymously(auth);
-                 userId = creds.user.uid;
-                 await loadDataFromCloud();
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        const creds = await signInWithCustomToken(auth, __initial_auth_token);
+                        userId = creds.user.uid;
+                    } else {
+                        const creds = await signInAnonymously(auth);
+                        userId = creds.user.uid;
+                    }
+                    await loadDataFromCloud();
+                } catch (error) {
+                    console.error("Auth error:", error);
+                    loadLocalData();
+                }
             } else {
                  loadLocalData();
             }
@@ -268,6 +278,7 @@
 
         // --- STREAMING_CHUNK: Rendering ---
         window.goBackToSchedule = function() {
+            if (isOnline && userId) saveDataToCloud();
             viewAttendance.classList.add('hidden');
             viewSchedule.classList.remove('hidden');
             renderSchedule();
@@ -409,7 +420,7 @@
             
             // Debounced cloud save
             clearTimeout(window.saveTimeout);
-            window.saveTimeout = setTimeout(() => { saveDataToCloud(); }, 1500);
+            window.saveTimeout = setTimeout(() => { saveDataToCloud(); }, 500);
         };
 
         function clearCurrentRecord() {
