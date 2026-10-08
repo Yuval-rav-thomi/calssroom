@@ -140,6 +140,23 @@
                 </button>
             </div>
             <div class="p-5">
+                <!-- ניהול קבוצות מתוך התיק האישי -->
+                <div class="mb-5 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                    <h4 class="font-bold text-indigo-900 text-sm mb-3">שיוך לקבוצות לימוד ומגמות:</h4>
+                    <div id="student-groups-container" class="flex flex-wrap gap-2 mb-3">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <select id="add-group-select" class="flex-1 bg-white border border-indigo-200 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700">
+                        </select>
+                        <button onclick="addStudentGroup()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-bold text-sm transition-colors active:scale-95">הוסף</button>
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <input type="text" id="new-group-input" placeholder="או צור קבוצה חדשה (למשל: תגבור)..." class="flex-1 bg-white border border-indigo-200 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700">
+                        <button onclick="createNewStudentGroup()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-bold text-sm transition-colors active:scale-95">צור</button>
+                    </div>
+                </div>
+
                 <label class="block text-sm font-semibold text-slate-600 mb-2">הערת סטטוס / היעדרות ארוכה:</label>
                 <textarea id="student-note-input" rows="3" placeholder="למשל: בחופשה משפחתית עד ה-20 לחודש, או נעדר עקב מחלה..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none text-slate-700 resize-none transition-shadow"></textarea>
                 
@@ -206,12 +223,12 @@
         let globalData = {
             attendance: {}, 
             notes: {},      
-            requests: []    
+            requests: [],
+            students: null // תלמידים יטענו מהענן כעת
         };
 
-        const studentsData = [
-            { id: 1, first: "שוהם", last: "אביטל", groups: ["מגמה: אלקטרוניקה", "אנגלית: 5 יחידות", "מתמטיקה: 5 יחידות", "פיזיקה: 5 יחידות"] },
-            { id: 2, first: "נועה", last: "אוחנה", groups: ["מגמה: אומנות", "אנגלית: 3 יחידות", "מתמטיקה: 3 יחידות", "תנ״ך מוגבר"] },
+        const defaultStudentsData = [
+            { id: 1, first: "שוהם", last: "אביטל", groups: ["מגמה: אלקטרוניקה", "אנגלית: 5 יחידות", "מתמטיקה: 5 יחידות"] },
             { id: 3, first: "נריה", last: "ביתן", groups: ["מגמה: תיאטרון", "אנגלית: 3 יחידות", "מתמטיקה: 4 יחידות"] },
             { id: 4, first: "תהל", last: "ביתן", groups: ["מגמה: תיאטרון", "אנגלית: 4/5 יחידות", "מתמטיקה: 3 יחידות", "ביולוגיה: 5 יחידות"] },
             { id: 5, first: "יהלי", last: "בן לולו", groups: ["מגמה: אומנות", "אנגלית: 3 יחידות", "מתמטיקה: 4 יחידות", "תנ״ך מוגבר"] },
@@ -237,7 +254,11 @@
         .map(s => ({...s, name: s.first + " " + s.last}))
         .sort((a, b) => a.last.localeCompare(b.last, 'he'));
 
-        const allPossibleGroups = [...new Set(studentsData.flatMap(s => s.groups)), "כל הכיתה - מליאה", "כל הכיתה - חינוך/חנ״ג"].sort();
+        function getAllPossibleGroups() {
+            const baseGroups = ["כל הכיתה - מליאה", "כל הכיתה - חינוך/חנ״ג"];
+            if (!globalData.students) return baseGroups;
+            return [...new Set([...baseGroups, ...globalData.students.flatMap(s => s.groups)])].sort();
+        }
 
         const scheduleLabels = {
             0: { 1: "לשון", 2: "לשון", 3: "אנגלית", 4: "אנגלית", 5: "מתמטיקה", 6: "מתמטיקה", 7: "היסטוריה", 8: "היסטוריה" },
@@ -300,14 +321,20 @@
         const dailyScheduleContainer = document.getElementById('daily-schedule-container');
 
         async function init() {
-            datePicker.value = currentDate;
-            populateStudentSelectForRequests();
-            updateScheduleUI();
-            
             // טעינה מקומית ראשונית לגיבוי
             const saved = localStorage.getItem('schoolAppData');
             if (saved) {
                 globalData = JSON.parse(saved);
+                if (!globalData.students) globalData.students = [...defaultStudentsData];
+            } else {
+                globalData.students = [...defaultStudentsData];
+            }
+
+            datePicker.value = currentDate;
+            populateStudentSelectForRequests();
+            updateScheduleUI();
+            
+            if (saved) {
                 renderAll();
             }
 
@@ -350,6 +377,9 @@
                     globalData.attendance = d.attendance || {};
                     globalData.notes = d.notes || {};
                     globalData.requests = d.requests || [];
+                    globalData.students = d.students || [...defaultStudentsData];
+                } else {
+                    globalData.students = [...defaultStudentsData];
                 }
                 isOnline = true;
                 syncStatus.innerHTML = `<span class="text-emerald-600 font-bold flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> מגובה בענן אונליין לחלוטין</span>`;
@@ -397,6 +427,7 @@
                 : [];
 
             groupSelector.innerHTML = '';
+            const allPossibleGroups = getAllPossibleGroups();
             
             if (allowedGroups.length > 0) {
                 const optgroup = document.createElement('optgroup');
@@ -466,9 +497,11 @@
 
         function renderAttendanceList() {
             studentsContainer.innerHTML = '';
+            if (!globalData.students) return;
+            
             const filtered = currentGroup.startsWith("כל הכיתה") 
-                ? studentsData 
-                : studentsData.filter(s => s.groups.includes(currentGroup));
+                ? globalData.students 
+                : globalData.students.filter(s => s.groups.includes(currentGroup));
             
             studentCount.textContent = `${filtered.length} תלמידים`;
             if (filtered.length === 0) {
@@ -521,14 +554,81 @@
         };
 
         window.openStudentNoteModal = function(studentId) {
-            selectedStudentForModal = studentsData.find(s => s.id === studentId);
+            selectedStudentForModal = globalData.students.find(s => s.id === studentId);
             document.getElementById('modal-student-name').textContent = selectedStudentForModal.name + " - תיק אישי";
             
             const existing = globalData.notes[studentId] || { text: "", isAlert: false };
             document.getElementById('student-note-input').value = existing.text;
             document.getElementById('student-note-alert').checked = existing.isAlert;
             
+            renderStudentGroupsModal();
             openModal('modal-student');
+        }
+
+        window.renderStudentGroupsModal = function() {
+            if(!selectedStudentForModal) return;
+            const container = document.getElementById('student-groups-container');
+            container.innerHTML = '';
+            
+            selectedStudentForModal.groups.sort().forEach(g => {
+                const chip = document.createElement('div');
+                chip.className = "bg-white border border-indigo-200 text-indigo-700 text-xs font-bold px-2 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm";
+                chip.innerHTML = `
+                    <span>${g}</span>
+                    <button onclick="removeStudentGroup('${g}')" class="text-indigo-400 hover:text-rose-500 transition-colors p-0.5 bg-indigo-50 hover:bg-rose-50 rounded-md" title="הסר קבוצה">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                `;
+                container.appendChild(chip);
+            });
+
+            const sel = document.getElementById('add-group-select');
+            sel.innerHTML = '<option value="">-- בחר קבוצה להוספה --</option>';
+            const allGroups = getAllPossibleGroups();
+            allGroups.forEach(g => {
+                if(!selectedStudentForModal.groups.includes(g) && !g.startsWith("כל הכיתה")) {
+                    const opt = document.createElement('option');
+                    opt.value = g;
+                    opt.textContent = g;
+                    sel.appendChild(opt);
+                }
+            });
+        }
+
+        window.removeStudentGroup = function(group) {
+            if(!selectedStudentForModal) return;
+            selectedStudentForModal.groups = selectedStudentForModal.groups.filter(g => g !== group);
+            updateStudentInGlobalData();
+        }
+
+        window.addStudentGroup = function() {
+            const sel = document.getElementById('add-group-select');
+            if(!sel.value || !selectedStudentForModal) return;
+            if(!selectedStudentForModal.groups.includes(sel.value)) {
+                selectedStudentForModal.groups.push(sel.value);
+                updateStudentInGlobalData();
+            }
+        }
+
+        window.createNewStudentGroup = function() {
+            const inp = document.getElementById('new-group-input');
+            const val = inp.value.trim();
+            if(!val || !selectedStudentForModal) return;
+            if(!selectedStudentForModal.groups.includes(val)) {
+                selectedStudentForModal.groups.push(val);
+                inp.value = '';
+                updateStudentInGlobalData();
+            }
+        }
+
+        function updateStudentInGlobalData() {
+            const idx = globalData.students.findIndex(s => s.id === selectedStudentForModal.id);
+            if(idx !== -1) {
+                globalData.students[idx] = selectedStudentForModal;
+                saveToCloud();
+                renderStudentGroupsModal();
+                updateScheduleUI(); 
+            }
         }
 
         window.saveStudentNote = function() {
@@ -546,7 +646,8 @@
         function populateStudentSelectForRequests() {
             const sel = document.getElementById('request-student-select');
             sel.innerHTML = '<option value="">-- בחר תלמיד/ה --</option>';
-            studentsData.forEach(s => {
+            if (!globalData.students) return;
+            globalData.students.forEach(s => {
                 const opt = document.createElement('option');
                 opt.value = s.id;
                 opt.textContent = s.name;
@@ -604,7 +705,7 @@
             });
 
             sorted.forEach(req => {
-                const student = studentsData.find(s => s.id === req.studentId);
+                const student = globalData.students ? globalData.students.find(s => s.id === req.studentId) : null;
                 const isOpen = req.status === 'open';
                 
                 const div = document.createElement('div');
@@ -627,7 +728,8 @@
         }
 
         function copyReport() {
-            const filtered = currentGroup.startsWith("כל הכיתה") ? studentsData : studentsData.filter(s => s.groups.includes(currentGroup));
+            if (!globalData.students) return;
+            const filtered = currentGroup.startsWith("כל הכיתה") ? globalData.students : globalData.students.filter(s => s.groups.includes(currentGroup));
             const records = globalData.attendance[`${currentDate}_${currentLesson}`] || {};
             
             const present = [], late = [], absent = [], unknown = [];
