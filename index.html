@@ -7,24 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Rubik', sans-serif;
-            background-color: #f8fafc;
-            -webkit-tap-highlight-color: transparent;
-        }
+        body { font-family: 'Rubik', sans-serif; background-color: #f8fafc; -webkit-tap-highlight-color: transparent; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
-        .slide-in {
-            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        .slide-in { animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .nav-btn.active { color: #4f46e5; }
         .nav-btn.active .icon-bg { background-color: #e0e7ff; }
     </style>
@@ -32,28 +19,23 @@
 <body class="text-slate-800 antialiased min-h-screen flex flex-col pb-20">
 
     <main class="max-w-3xl mx-auto w-full p-4 md:p-6 flex-1">
-        
         <header class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4 text-center relative overflow-hidden">
             <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500"></div>
             <h1 class="text-2xl font-bold text-slate-800 mb-1">ניהול כיתה - י"א 2</h1>
             <div class="flex items-center justify-center gap-2 text-xs font-medium">
-                <span id="sync-status" class="flex items-center gap-1.5 text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
-                    <span class="w-2 h-2 rounded-full bg-slate-300 inline-block animate-pulse"></span>
-                    מתחבר לענן...
-                </span>
+                <span id="sync-status" class="flex items-center gap-1.5 text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">מתחבר לענן...</span>
             </div>
         </header>
 
         <div id="view-schedule" class="transition-all duration-300">
-            
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="w-full sm:w-auto flex-1">
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">תאריך</label>
-                    <input type="date" id="date-picker" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none text-lg font-medium text-slate-700 transition-shadow">
+                    <input type="date" id="date-picker" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none text-lg font-medium text-slate-700">
                 </div>
                 <div class="w-full sm:w-auto flex-1">
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">שיעור נוכחי (סינון אוטומטי)</label>
-                    <select id="lesson-selector" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none text-lg font-medium text-slate-700 transition-shadow">
+                    <select id="lesson-selector" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none text-lg font-medium text-slate-700">
                         <option value="1">שיעור 1 (08:25-09:10)</option>
                         <option value="2">שיעור 2 (09:10-09:55)</option>
                         <option value="3">שיעור 3 (10:15-11:00)</option>
@@ -67,34 +49,24 @@
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-4">
-                <h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    מערכת שעות יומית:
-                </h3>
-                <div id="daily-schedule-container" class="flex flex-wrap gap-2">
-                    <!-- Populated by JS -->
-                </div>
+                <h3 class="text-sm font-bold text-slate-700 mb-3">מערכת שעות יומית:</h3>
+                <div id="daily-schedule-container" class="flex flex-wrap gap-2"></div>
             </div>
 
             <div class="bg-indigo-50 rounded-2xl shadow-sm border border-indigo-100 p-4 mb-6">
-                <label class="block text-sm font-semibold text-indigo-900 mb-2">קבוצה / מגמה (מסונן לפי המערכת):</label>
-                <select id="group-selector" class="w-full bg-white border border-indigo-200 rounded-xl p-3 outline-none font-bold text-indigo-800 shadow-sm focus:ring-2 focus:ring-indigo-500 transition-shadow">
-                    <!-- Populated by JS -->
-                </select>
+                <label class="block text-sm font-semibold text-indigo-900 mb-2">קבוצה / מגמה:</label>
+                <select id="group-selector" class="w-full bg-white border border-indigo-200 rounded-xl p-3 outline-none font-bold text-indigo-800 focus:ring-2 focus:ring-indigo-500"></select>
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
                 <div class="bg-slate-50 px-5 py-4 border-b border-slate-100 flex justify-between items-center">
                     <h2 class="font-bold text-slate-800 text-lg">רשימת נוכחות</h2>
-                    <span id="student-count" class="text-xs bg-indigo-100 text-indigo-700 py-1.5 px-3 rounded-full font-bold shadow-sm">0 תלמידים</span>
+                    <span id="student-count" class="text-xs bg-indigo-100 text-indigo-700 py-1.5 px-3 rounded-full font-bold">0 תלמידים</span>
                 </div>
-                <div id="students-container" class="divide-y divide-slate-100">
-                    <!-- Students injected here -->
-                </div>
+                <div id="students-container" class="divide-y divide-slate-100"></div>
             </div>
             
-            <button id="copy-btn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-slate-200 transition-all active:scale-95 flex justify-center items-center gap-2 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            <button id="copy-btn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-slate-200 flex justify-center items-center gap-2 mb-4">
                 העתק דו"ח נוכחות יומי
             </button>
         </div>
@@ -102,102 +74,119 @@
         <div id="view-requests" class="hidden transition-all duration-300 slide-in">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-slate-800">מעקב פניות ומשימות</h2>
-                <button onclick="openRequestModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm active:scale-95 flex items-center gap-1 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    פנייה חדשה
-                </button>
+                <button onclick="openRequestModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1">פנייה חדשה</button>
             </div>
-            
-            <div id="requests-container" class="space-y-3">
-                <!-- Requests injected here -->
-            </div>
+            <div id="requests-container" class="space-y-3"></div>
         </div>
 
+        <div id="view-manage" class="hidden transition-all duration-300 slide-in pb-10">
+            <h2 class="text-xl font-bold text-slate-800 mb-6">הגדרות וניהול כיתה</h2>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-6">
+                <h3 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
+                    הוספת תלמיד חדש
+                </h3>
+                <div class="flex flex-col sm:flex-row gap-2 mb-4">
+                    <input type="text" id="new-student-first" placeholder="שם פרטי" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="new-student-last" placeholder="שם משפחה" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button onclick="addNewStudent()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-bold shadow-sm transition-colors">הוסף</button>
+                </div>
+                <div class="text-xs text-slate-500 mb-2">רשימת התלמידים בכיתה:</div>
+                <div id="manage-students-list" class="max-h-64 overflow-y-auto divide-y divide-slate-100 border border-slate-100 rounded-xl bg-slate-50">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+                <h3 class="font-bold text-slate-800 text-lg mb-1 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    עריכת מערכת שעות
+                </h3>
+                <p class="text-xs text-slate-500 mb-4">בחר יום, עדכן את השיעורים ושמור. הקבוצות חייבות להירשם מדויק ומופרדות בפסיק.</p>
+                <select id="manage-schedule-day" onchange="renderScheduleEditor()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 outline-none text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500">
+                    <option value="0">יום ראשון</option>
+                    <option value="1">יום שני</option>
+                    <option value="2">יום שלישי</option>
+                    <option value="3">יום רביעי</option>
+                    <option value="4">יום חמישי</option>
+                    <option value="5">יום שישי</option>
+                </select>
+                <div id="schedule-editor-container" class="space-y-3 mb-5">
+                    <!-- Populated by JS -->
+                </div>
+                <button onclick="saveSchedule()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-95 text-lg">שמור מערכת בענן</button>
+            </div>
+        </div>
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 px-6 py-2 pb-safe flex justify-around shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-40">
-        <button id="nav-schedule" class="nav-btn active flex flex-col items-center p-2 text-slate-400 transition-colors w-20" onclick="switchView('schedule')">
-            <div class="icon-bg p-1.5 rounded-full transition-colors mb-1">
+    <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 px-2 py-2 flex justify-around shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-40">
+        <button id="nav-schedule" class="nav-btn active flex flex-col items-center p-2 text-slate-400 w-[30%]" onclick="switchView('schedule')">
+            <div class="icon-bg p-1.5 rounded-full mb-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
             </div>
-            <span class="text-[10px] font-bold">נוכחות</span>
+            <span class="text-[11px] font-bold">נוכחות</span>
         </button>
-        <button id="nav-requests" class="nav-btn flex flex-col items-center p-2 text-slate-400 transition-colors w-20" onclick="switchView('requests')">
-            <div class="icon-bg p-1.5 rounded-full transition-colors mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <button id="nav-requests" class="nav-btn flex flex-col items-center p-2 text-slate-400 w-[30%]" onclick="switchView('requests')">
+            <div class="icon-bg p-1.5 rounded-full mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
             </div>
-            <span class="text-[10px] font-bold">מעקב פניות</span>
+            <span class="text-[11px] font-bold">פניות</span>
+        </button>
+        <button id="nav-manage" class="nav-btn flex flex-col items-center p-2 text-slate-400 w-[30%]" onclick="switchView('manage')">
+            <div class="icon-bg p-1.5 rounded-full mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </div>
+            <span class="text-[11px] font-bold">הגדרות</span>
         </button>
     </nav>
 
-    <!-- Modal: Student Profile -->
-    <div id="modal-student" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+    <div id="modal-student" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden slide-in">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 id="modal-student-name" class="font-bold text-lg text-slate-800">שם התלמיד</h3>
-                <button onclick="closeModal('modal-student')" class="text-slate-400 hover:text-slate-600 bg-white rounded-full p-1 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+                <button onclick="closeModal('modal-student')" class="text-slate-400 font-bold text-xl leading-none">&times;</button>
             </div>
-            <div class="p-5">
-                <!-- ניהול קבוצות מתוך התיק האישי -->
+            <div class="p-5 max-h-[70vh] overflow-y-auto">
                 <div class="mb-5 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-                    <h4 class="font-bold text-indigo-900 text-sm mb-3">שיוך לקבוצות לימוד ומגמות:</h4>
-                    <div id="student-groups-container" class="flex flex-wrap gap-2 mb-3">
-                        <!-- Populated by JS -->
-                    </div>
+                    <h4 class="font-bold text-indigo-900 text-sm mb-3">שיוך לקבוצות:</h4>
+                    <div id="student-groups-container" class="flex flex-wrap gap-2 mb-3"></div>
                     <div class="flex gap-2 mt-3">
-                        <select id="add-group-select" class="flex-1 bg-white border border-indigo-200 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700">
-                        </select>
-                        <button onclick="addStudentGroup()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-bold text-sm transition-colors active:scale-95">הוסף</button>
+                        <select id="add-group-select" class="flex-1 bg-white border border-indigo-200 rounded-lg p-2 text-sm outline-none"></select>
+                        <button onclick="addStudentGroup()" class="bg-indigo-600 text-white px-3 py-2 rounded-lg font-bold text-sm">הוסף</button>
                     </div>
                     <div class="flex gap-2 mt-2">
-                        <input type="text" id="new-group-input" placeholder="או צור קבוצה חדשה (למשל: תגבור)..." class="flex-1 bg-white border border-indigo-200 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700">
-                        <button onclick="createNewStudentGroup()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-bold text-sm transition-colors active:scale-95">צור</button>
+                        <input type="text" id="new-group-input" placeholder="צור קבוצה חדשה..." class="flex-1 bg-white border border-indigo-200 rounded-lg p-2 text-sm outline-none">
+                        <button onclick="createNewStudentGroup()" class="bg-indigo-600 text-white px-3 py-2 rounded-lg font-bold text-sm">צור</button>
                     </div>
                 </div>
-
-                <label class="block text-sm font-semibold text-slate-600 mb-2">הערת סטטוס / היעדרות ארוכה:</label>
-                <textarea id="student-note-input" rows="3" placeholder="למשל: בחופשה משפחתית עד ה-20 לחודש, או נעדר עקב מחלה..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none text-slate-700 resize-none transition-shadow"></textarea>
-                
+                <label class="block text-sm font-semibold text-slate-600 mb-2">הערת סטטוס (מחלה/חופשה):</label>
+                <textarea id="student-note-input" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none"></textarea>
                 <div class="mt-4 flex items-center gap-2 bg-rose-50 p-3 rounded-xl border border-rose-100">
-                    <input type="checkbox" id="student-note-alert" class="w-4 h-4 text-rose-600 rounded focus:ring-rose-500">
-                    <label for="student-note-alert" class="text-sm font-bold text-rose-700">הצג התראה זו ברשימת הנוכחות באדום</label>
+                    <input type="checkbox" id="student-note-alert" class="w-4 h-4 text-rose-600 rounded">
+                    <label for="student-note-alert" class="text-sm font-bold text-rose-700">הצג התראה זו ברשימה באדום</label>
                 </div>
-
-                <button onclick="saveStudentNote()" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-95">
-                    שמור שינויים בענן
-                </button>
+                <button onclick="saveStudentNote()" class="w-full mt-6 bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl shadow-md">שמור שינויים</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: New Request -->
-    <div id="modal-request" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+    <div id="modal-request" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden slide-in">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="font-bold text-lg text-slate-800">הוספת פנייה / משימה</h3>
-                <button onclick="closeModal('modal-request')" class="text-slate-400 hover:text-slate-600 bg-white rounded-full p-1 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+                <h3 class="font-bold text-lg text-slate-800">הוספת פנייה</h3>
+                <button onclick="closeModal('modal-request')" class="text-slate-400 font-bold text-xl leading-none">&times;</button>
             </div>
             <div class="p-5">
                 <label class="block text-sm font-semibold text-slate-600 mb-2">עבור איזה תלמיד?</label>
-                <select id="request-student-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 outline-none text-slate-700 font-medium focus:ring-2 focus:ring-indigo-500 transition-shadow">
-                    <!-- Populated dynamically -->
-                </select>
-
+                <select id="request-student-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 outline-none font-medium"></select>
                 <label class="block text-sm font-semibold text-slate-600 mb-2">פרטי הפנייה:</label>
-                <textarea id="request-text-input" rows="3" placeholder="למשל: צריך לקבוע מועד ב' בפיזיקה..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none text-slate-700 resize-none transition-shadow"></textarea>
-                
-                <button onclick="saveNewRequest()" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-95">
-                    הוסף משימה למעקב
-                </button>
+                <textarea id="request-text-input" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none"></textarea>
+                <button onclick="saveNewRequest()" class="w-full mt-6 bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl">הוסף משימה למעקב</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-5 py-3 rounded-xl shadow-2xl transition-all duration-300 opacity-0 pointer-events-none flex items-center gap-3 z-[60] font-medium text-sm">
         <span id="toast-msg">נשמר!</span>
     </div>
@@ -207,7 +196,7 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // פרטי פרויקט הפיירבייס שהעתקנו
+        // זה הקוד הפרטי שלך ל-Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDALs5hI1Iz8-ytOpJtH-h70dk-IpdjV7I",
             authDomain: "myclassapp-3460d.firebaseapp.com",
@@ -221,10 +210,7 @@
         let isOnline = false;
 
         let globalData = {
-            attendance: {}, 
-            notes: {},      
-            requests: [],
-            students: null // תלמידים יטענו מהענן כעת
+            attendance: {}, notes: {}, requests: [], students: null, schedule: null
         };
 
         const defaultStudentsData = [
@@ -242,17 +228,53 @@
             { id: 13, first: "טליה", last: "עזריאלי", groups: ["מגמה: אומנות", "אנגלית: 4/5 יחידות", "מתמטיקה: 3 יחידות"] },
             { id: 14, first: "דוד", last: "פדורוב", groups: ["מגמה: אומנות", "אנגלית: 5 יחידות", "מתמטיקה: 4 יחידות", "פיזיקה: 5 יחידות"] },
             { id: 15, first: "ליעד", last: "פרידמן", groups: ["מגמה: אלקטרוניקה", "אנגלית: 5 יחידות", "מתמטיקה: 5 יחידות", "ביולוגיה: 5 יחידות"] },
-            { id: 16, first: "נועה", last: "קדוש", groups: ["מגמה: אלקטרוניקה", "אנגלית: 4/5 יחידות", "מתמטיקה: 5 יחידות", "ביולוגיה: 5 יחידות"] },
+            { id: 16, first: "נועה", last: "אוחנה", groups: ["מגמה: אלקטרוניקה", "אנגלית: 4/5 יחידות", "מתמטיקה: 5 יחידות", "תנ״ך מוגבר"] },
             { id: 17, first: "יהלי אליהו", last: "שיש", groups: ["מגמה: תיאטרון", "אנגלית: 5 יחידות", "מתמטיקה: 3 יחידות"] },
             { id: 18, first: "עופרי", last: "שפירא", groups: ["מגמה: אלקטרוניקה", "אנגלית: 4/5 יחידות", "מתמטיקה: 4 יחידות", "תנ״ך מוגבר"] },
             { id: 19, first: "שירה", last: "תורג'מן", groups: ["מגמה: אלקטרוניקה", "אנגלית: 5 יחידות", "מתמטיקה: 4 יחידות", "ביולוגיה: 5 יחידות"] },
             { id: 20, first: "איתמר", last: "כמיסה", groups: ["מגמה: אומנות", "מתמטיקה: 3 יחידות", "אנגלית: 4/5 יחידות"] },
             { id: 21, first: "ידידיה", last: "כהן", groups: ["מגמה: אומנות", "מתמטיקה: 3 יחידות", "אנגלית: 4/5 יחידות"] },
             { id: 22, first: "איתן", last: "זייד", groups: ["מגמה: תיאטרון", "אנגלית: 3 יחידות", "מתמטיקה: 3 יחידות"] }
-        ]
-        // יצירת שם מלא ומיון לפי הא' ב' של שם המשפחה!
-        .map(s => ({...s, name: s.first + " " + s.last}))
-        .sort((a, b) => a.last.localeCompare(b.last, 'he'));
+        ].map(s => ({...s, name: s.first + " " + s.last})).sort((a, b) => a.last.localeCompare(b.last, 'he'));
+
+        const defaultSchedule = {
+            labels: {
+                0: { 1: "לשון", 2: "לשון", 3: "אנגלית", 4: "אנגלית", 5: "מתמטיקה", 6: "מתמטיקה", 7: "היסטוריה", 8: "היסטוריה" },
+                1: { 1: "מתמטיקה (4,5)", 2: "מתמטיקה (כל הקבוצות)", 3: "חינוך", 4: "היסטוריה", 5: "היסטוריה", 6: "חנ״ג", 7: "מגמות (ללא תיאטרון)", 8: "מגמות" },
+                2: { 1: "תנ״ך מוגבר / פיזיקה / ביולוגיה", 2: "תנ״ך מוגבר / פיזיקה / ביולוגיה", 3: "היסטוריה", 4: "היסטוריה", 5: "אנגלית", 6: "אנגלית", 7: "לשון", 8: "לשון" },
+                3: { 1: "היסטוריה", 2: "היסטוריה", 3: "לשון", 4: "לשון", 5: "מגמות", 6: "מגמות", 7: "תנ״ך מוגבר / פיזיקה / ביולוגיה", 8: "תנ״ך מוגבר / פיזיקה / ביולוגיה" },
+                4: { 1: "מתמטיקה", 2: "מתמטיקה", 3: "תנ״ך מליאה", 4: "תנ״ך מליאה", 5: "לשון", 6: "לשון", 7: "מגמות", 8: "מגמות" }
+            },
+            groups: {
+                0: { 
+                    1: ["כל הכיתה - מליאה"], 2: ["כל הכיתה - מליאה"],
+                    3: ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"], 4: ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"],
+                    5: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"], 6: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"],
+                    7: ["כל הכיתה - מליאה"], 8: ["כל הכיתה - מליאה"]
+                },
+                1: { 
+                    1: ["מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"], 2: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"],
+                    3: ["כל הכיתה - חינוך/חנ״ג"], 4: ["כל הכיתה - מליאה"], 5: ["כל הכיתה - מליאה"], 6: ["כל הכיתה - חינוך/חנ״ג"],
+                    7: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה"], 8: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה"]
+                },
+                2: { 
+                    1: ["ביולוגיה: 5 יחידות", "פיזיקה: 5 יחידות", "תנ״ך מוגבר"], 2: ["ביולוגיה: 5 יחידות", "פיזיקה: 5 יחידות", "תנ״ך מוגבר"],
+                    3: ["כל הכיתה - מליאה"], 4: ["כל הכיתה - מליאה"],
+                    5: ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"], 6: ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"],
+                    7: ["כל הכיתה - מליאה"], 8: ["כל הכיתה - מליאה"]
+                },
+                3: { 
+                    1: ["כל הכיתה - מליאה"], 2: ["כל הכיתה - מליאה"], 3: ["כל הכיתה - מליאה"], 4: ["כל הכיתה - מליאה"],
+                    5: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"], 6: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"],
+                    7: ["ביולוגיה: 5 יחידות", "פיזיקה: 5 יחידות", "תנ״ך מוגבר"], 8: ["ביולוגיה: 5 יחידות", "פיזיקה: 5 יחידות", "תנ״ך מוגבר"]
+                },
+                4: { 
+                    1: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"], 2: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"],
+                    3: ["כל הכיתה - מליאה"], 4: ["כל הכיתה - מליאה"], 5: ["כל הכיתה - מליאה"], 6: ["כל הכיתה - מליאה"],
+                    7: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"], 8: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"]
+                }
+            }
+        };
 
         function getAllPossibleGroups() {
             const baseGroups = ["כל הכיתה - מליאה", "כל הכיתה - חינוך/חנ״ג"];
@@ -260,117 +282,34 @@
             return [...new Set([...baseGroups, ...globalData.students.flatMap(s => s.groups)])].sort();
         }
 
-        const scheduleLabels = {
-            0: { 1: "לשון", 2: "לשון", 3: "אנגלית", 4: "אנגלית", 5: "מתמטיקה", 6: "מתמטיקה", 7: "היסטוריה", 8: "היסטוריה" },
-            1: { 1: "מתמטיקה (4,5)", 2: "מתמטיקה (כל הקבוצות)", 3: "חינוך", 4: "היסטוריה", 5: "היסטוריה", 6: "חנ״ג", 7: "מגמות (ללא תיאטרון)", 8: "מגמות" },
-            2: { 1: "מגמות מדעיות ותנ״ך מוגבר", 2: "מגמות מדעיות ותנ״ך מוגבר", 3: "היסטוריה", 4: "היסטוריה", 5: "אנגלית", 6: "אנגלית", 7: "לשון", 8: "לשון" },
-            3: { 1: "היסטוריה", 2: "היסטוריה", 3: "לשון", 4: "לשון", 5: "מגמות", 6: "מגמות", 7: "מגמות מדעיות ותנ״ך מוגבר", 8: "מגמות מדעיות ותנ״ך מוגבר" },
-            4: { 1: "מתמטיקה", 2: "מתמטיקה", 3: "תנ״ך מליאה", 4: "תנ״ך מליאה", 5: "לשון", 6: "לשון", 7: "מגמות", 8: "מגמות" }
-        };
-
-        const scheduleByDay = {
-            0: { // ראשון
-                1: ["כל הכיתה - מליאה"], 2: ["כל הכיתה - מליאה"],
-                3: ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"], 4: ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"],
-                5: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"], 6: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"],
-                7: ["כל הכיתה - מליאה"], 8: ["כל הכיתה - מליאה"]
-            },
-            1: { // שני
-                1: ["מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"],
-                2: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"],
-                3: ["כל הכיתה - חינוך/חנ״ג"],
-                4: ["כל הכיתה - מליאה"], 5: ["כל הכיתה - מליאה"],
-                6: ["כל הכיתה - חינוך/חנ״ג"],
-                7: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה"],
-                8: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה"]
-            },
-            2: { // שלישי
-                1: ["ביולוגיה: 5 יחידות", "פיזיקה: 5 יחידות", "תנ״ך מוגבר"], 2: ["ביולוגיה: 5 יחידות", "פיזיקה: 5 יחידות", "תנ״ך מוגבר"],
-                3: ["כל הכיתה - מליאה"], 4: ["כל הכיתה - מליאה"],
-                5: ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"], 6: ["אנגלית: 3 יחידות", "אנגלית: 4/5 יחידות", "אנגלית: 5 יחידות"],
-                7: ["כל הכיתה - מליאה"], 8: ["כל הכיתה - מליאה"]
-            },
-            3: { // רביעי
-                1: ["כל הכיתה - מליאה"], 2: ["כל הכיתה - מליאה"],
-                3: ["כל הכיתה - מליאה"], 4: ["כל הכיתה - מליאה"],
-                5: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"], 6: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"],
-                7: ["ביולוגיה: 5 יחידות", "פיזיקה: 5 יחידות", "תנ״ך מוגבר"], 8: ["ביולוגיה: 5 יחידות", "פיזיקה: 5 יחידות", "תנ״ך מוגבר"]
-            },
-            4: { // חמישי
-                1: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"], 2: ["מתמטיקה: 3 יחידות", "מתמטיקה: 4 יחידות", "מתמטיקה: 5 יחידות"],
-                3: ["כל הכיתה - מליאה"], 4: ["כל הכיתה - מליאה"],
-                5: ["כל הכיתה - מליאה"], 6: ["כל הכיתה - מליאה"],
-                7: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"], 8: ["מגמה: אומנות", "מגמה: חילוץ והצלה", "מגמה: אלקטרוניקה", "מגמה: תיאטרון"]
-            }
-        };
-
-        // State
         let currentDate = new Date().toISOString().split('T')[0];
-        let currentLesson = "1";
-        let currentGroup = "";
-        let selectedStudentForModal = null;
-
-        // Elements
-        const datePicker = document.getElementById('date-picker');
-        const lessonSelector = document.getElementById('lesson-selector');
-        const groupSelector = document.getElementById('group-selector');
-        const studentsContainer = document.getElementById('students-container');
-        const requestsContainer = document.getElementById('requests-container');
-        const studentCount = document.getElementById('student-count');
-        const syncStatus = document.getElementById('sync-status');
-        const dailyScheduleContainer = document.getElementById('daily-schedule-container');
+        let currentLesson = "1", currentGroup = "", selectedStudentForModal = null;
+        const elements = {
+            datePicker: document.getElementById('date-picker'), lessonSelector: document.getElementById('lesson-selector'),
+            groupSelector: document.getElementById('group-selector'), studentsContainer: document.getElementById('students-container'),
+            requestsContainer: document.getElementById('requests-container'), studentCount: document.getElementById('student-count'),
+            syncStatus: document.getElementById('sync-status'), dailyScheduleContainer: document.getElementById('daily-schedule-container')
+        };
 
         async function init() {
-            // טעינה מקומית ראשונית לגיבוי
-            const saved = localStorage.getItem('schoolAppData');
-            if (saved) {
-                globalData = JSON.parse(saved);
-                if (!globalData.students) globalData.students = [...defaultStudentsData];
-            } else {
-                globalData.students = [...defaultStudentsData];
-            }
-
-            datePicker.value = currentDate;
-            populateStudentSelectForRequests();
-            updateScheduleUI();
-            
-            if (saved) {
-                renderAll();
-            }
-
+            elements.datePicker.value = currentDate;
             try {
-                // התחברות לפיירבייס שלך
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
-                
                 await signInAnonymously(auth);
                 setupCloudSync();
             } catch (e) {
-                console.error("Firebase init error", e);
-                syncStatus.innerHTML = `<span class="text-amber-500 font-bold">⚠️ שגיאת התחברות - עובד מקומית</span>`;
+                elements.syncStatus.innerHTML = `<span class="text-amber-500 font-bold">⚠️ עובד מקומית</span>`;
             }
-
-            // אירועים
-            datePicker.addEventListener('change', (e) => { 
-                currentDate = e.target.value; 
-                updateScheduleUI(); 
-            });
-            lessonSelector.addEventListener('change', (e) => { 
-                currentLesson = e.target.value; 
-                updateScheduleUI(); 
-            });
-            groupSelector.addEventListener('change', (e) => { 
-                currentGroup = e.target.value; 
-                renderAttendanceList(); 
-            });
+            elements.datePicker.addEventListener('change', (e) => { currentDate = e.target.value; updateScheduleUI(); });
+            elements.lessonSelector.addEventListener('change', (e) => { currentLesson = e.target.value; updateScheduleUI(); });
+            elements.groupSelector.addEventListener('change', (e) => { currentGroup = e.target.value; renderAttendanceList(); });
             document.getElementById('copy-btn').addEventListener('click', copyReport);
         }
 
         function setupCloudSync() {
-            // נקודה קריטית: שומר למסמך אחד קבוע, כך שכל מי שפותח את האפליקציה רואה את אותו הדבר!
             const docRef = doc(db, 'shared_data', 'yud_alef_2');
-            
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const d = docSnap.data();
@@ -378,136 +317,189 @@
                     globalData.notes = d.notes || {};
                     globalData.requests = d.requests || [];
                     globalData.students = d.students || [...defaultStudentsData];
+                    // המרת המערכת לדינמית - אם אין, מושך מהקוד המקורי
+                    globalData.schedule = d.schedule || JSON.parse(JSON.stringify(defaultSchedule));
                 } else {
                     globalData.students = [...defaultStudentsData];
+                    globalData.schedule = JSON.parse(JSON.stringify(defaultSchedule));
                 }
                 isOnline = true;
-                syncStatus.innerHTML = `<span class="text-emerald-600 font-bold flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> מגובה בענן אונליין לחלוטין</span>`;
+                elements.syncStatus.innerHTML = `<span class="text-emerald-600 font-bold">מגובה בענן</span>`;
                 renderAll();
-            }, (error) => {
-                console.error("Sync error:", error);
-                syncStatus.innerHTML = `<span class="text-rose-500">שגיאת רשת</span>`;
             });
         }
 
         async function saveToCloud() {
-            // תמיד שומרים גם בזיכרון הטלפון ליתר ביטחון
-            localStorage.setItem('schoolAppData', JSON.stringify(globalData));
-            
             if (isOnline && db) {
-                try {
-                    const docRef = doc(db, 'shared_data', 'yud_alef_2');
-                    await setDoc(docRef, globalData, { merge: true });
-                } catch (e) {
-                    console.error("Save error:", e);
-                }
+                const docRef = doc(db, 'shared_data', 'yud_alef_2');
+                await setDoc(docRef, globalData, { merge: true });
             }
         }
 
         function updateScheduleUI() {
+            if(!globalData.schedule) return;
             const day = new Date(currentDate).getDay();
-            
-            if (!scheduleLabels[day]) {
-                dailyScheduleContainer.innerHTML = '<span class="text-slate-400 text-sm py-2 font-medium">אין לימודים מוגדרים ביום זה. ניתן לבחור קבוצה ידנית.</span>';
+            const dayLabels = globalData.schedule.labels[day] || {};
+            const dayGroups = globalData.schedule.groups[day] || {};
+
+            if (Object.keys(dayLabels).length === 0) {
+                elements.dailyScheduleContainer.innerHTML = '<span class="text-slate-400 text-sm">אין לימודים מוגדרים.</span>';
             } else {
                 let html = '';
                 for (let i = 1; i <= 8; i++) {
-                    if (scheduleLabels[day][i]) {
+                    if (dayLabels[i]) {
                         const isCurrent = (i.toString() === currentLesson);
-                        html += `<div class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isCurrent ? 'bg-indigo-600 text-white border-indigo-600 shadow-md transform scale-105' : 'bg-white text-slate-500 border-slate-200'}">
-                            שיעור ${i}: ${scheduleLabels[day][i]}
-                        </div>`;
+                        html += `<div class="px-3 py-1.5 rounded-lg text-xs font-bold border ${isCurrent ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500'}">שיעור ${i}: ${dayLabels[i]}</div>`;
                     }
                 }
-                dailyScheduleContainer.innerHTML = html;
+                elements.dailyScheduleContainer.innerHTML = html;
             }
 
-            const allowedGroups = (scheduleByDay[day] && scheduleByDay[day][currentLesson]) 
-                ? scheduleByDay[day][currentLesson] 
-                : [];
-
-            groupSelector.innerHTML = '';
+            const allowedGroups = dayGroups[currentLesson] ? dayGroups[currentLesson] : [];
+            elements.groupSelector.innerHTML = '';
             const allPossibleGroups = getAllPossibleGroups();
             
             if (allowedGroups.length > 0) {
                 const optgroup = document.createElement('optgroup');
                 optgroup.label = "📚 קבוצות לפי המערכת בשיעור זה:";
-                allowedGroups.forEach(g => {
-                    const opt = document.createElement('option');
-                    opt.value = g;
-                    opt.textContent = g;
-                    optgroup.appendChild(opt);
-                });
-                groupSelector.appendChild(optgroup);
+                allowedGroups.forEach(g => { const opt = document.createElement('option'); opt.value = g; opt.textContent = g; optgroup.appendChild(opt); });
+                elements.groupSelector.appendChild(optgroup);
             }
 
             const optgroupAll = document.createElement('optgroup');
-            optgroupAll.label = "🔍 כל הקבוצות האחרות (בחירה ידנית):";
+            optgroupAll.label = "🔍 כל הקבוצות האחרות:";
             allPossibleGroups.forEach(g => {
-                if (!allowedGroups.includes(g)) {
-                    const opt = document.createElement('option');
-                    opt.value = g;
-                    opt.textContent = g;
-                    optgroupAll.appendChild(opt);
-                }
+                if (!allowedGroups.includes(g)) { const opt = document.createElement('option'); opt.value = g; opt.textContent = g; optgroupAll.appendChild(opt); }
             });
-            groupSelector.appendChild(optgroupAll);
-            
+            elements.groupSelector.appendChild(optgroupAll);
             currentGroup = allowedGroups.length > 0 ? allowedGroups[0] : allPossibleGroups[0];
-            groupSelector.value = currentGroup;
-
+            if(elements.groupSelector.options.length > 0) elements.groupSelector.value = currentGroup;
             renderAttendanceList();
         }
 
         window.switchView = function(viewId) {
             document.getElementById('view-schedule').classList.add('hidden');
             document.getElementById('view-requests').classList.add('hidden');
+            document.getElementById('view-manage').classList.add('hidden');
             document.getElementById(`view-${viewId}`).classList.remove('hidden');
             
             document.getElementById('nav-schedule').classList.remove('active');
             document.getElementById('nav-requests').classList.remove('active');
+            document.getElementById('nav-manage').classList.remove('active');
             document.getElementById(`nav-${viewId}`).classList.add('active');
             
             if(viewId === 'requests') renderRequests();
+            if(viewId === 'manage') { renderManageStudents(); renderScheduleEditor(); }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        window.openModal = function(modalId) {
-            const m = document.getElementById(modalId);
-            m.classList.remove('hidden');
-            setTimeout(() => m.classList.add('opacity-100'), 10);
-        }
-        window.closeModal = function(modalId) {
-            const m = document.getElementById(modalId);
-            m.classList.remove('opacity-100');
-            setTimeout(() => m.classList.add('hidden'), 300);
-        }
-
+        window.openModal = function(modalId) { document.getElementById(modalId).classList.remove('hidden'); }
+        window.closeModal = function(modalId) { document.getElementById(modalId).classList.add('hidden'); }
         function showToast(msg) {
-            const t = document.getElementById('toast');
-            document.getElementById('toast-msg').textContent = msg;
-            t.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
-            setTimeout(() => t.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4'), 2500);
+            const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg;
+            t.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => t.classList.add('opacity-0', 'pointer-events-none'), 2500);
         }
 
-        function renderAll() {
-            renderAttendanceList();
-            if(!document.getElementById('view-requests').classList.contains('hidden')) renderRequests();
+        function renderAll() { 
+            updateScheduleUI();
+            if(!document.getElementById('view-requests').classList.contains('hidden')) renderRequests(); 
+            if(!document.getElementById('view-manage').classList.contains('hidden')) { renderManageStudents(); renderScheduleEditor(); }
+            populateStudentSelectForRequests(); 
+        }
+
+        window.renderManageStudents = function() {
+            const container = document.getElementById('manage-students-list');
+            container.innerHTML = '';
+            if(!globalData.students) return;
+            
+            globalData.students.forEach(s => {
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center p-3 hover:bg-slate-100 transition-colors";
+                div.innerHTML = `
+                    <div class="font-bold text-slate-800 text-sm">${s.name}</div>
+                    <button onclick="deleteStudent(${s.id})" class="text-rose-500 p-2 hover:bg-rose-100 rounded-lg transition-colors" title="מחק תלמיד">מחק</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.addNewStudent = function() {
+            const first = document.getElementById('new-student-first').value.trim();
+            const last = document.getElementById('new-student-last').value.trim();
+            if(!first || !last) return alert("יש להזין שם פרטי ושם משפחה");
+            
+            globalData.students.push({
+                id: Date.now(),
+                first: first, last: last, name: first + " " + last,
+                groups: ["כל הכיתה - מליאה"]
+            });
+            globalData.students.sort((a, b) => a.last.localeCompare(b.last, 'he'));
+            saveToCloud();
+            
+            document.getElementById('new-student-first').value = '';
+            document.getElementById('new-student-last').value = '';
+            showToast("תלמיד/ה נוספו בהצלחה!");
+        }
+
+        window.deleteStudent = function(id) {
+            if(confirm("האם למחוק תלמיד זה מהמערכת? הפעולה תשמור שינויים בענן.")) {
+                globalData.students = globalData.students.filter(s => s.id !== id);
+                saveToCloud();
+                showToast("תלמיד הוסר מהכיתה.");
+            }
+        }
+
+        window.renderScheduleEditor = function() {
+            if(!globalData.schedule) return;
+            const day = document.getElementById('manage-schedule-day').value;
+            const container = document.getElementById('schedule-editor-container');
+            container.innerHTML = '';
+            const dayLabels = globalData.schedule.labels[day] || {};
+            const dayGroups = globalData.schedule.groups[day] || {};
+
+            for(let i=1; i<=8; i++) {
+                const label = dayLabels[i] || "";
+                const groups = (dayGroups[i] || []).join(", ");
+                
+                const div = document.createElement('div');
+                div.className = "p-3 bg-white rounded-xl border border-slate-200 shadow-sm";
+                div.innerHTML = `
+                    <div class="font-bold text-sm text-indigo-900 mb-2">שיעור ${i}</div>
+                    <input type="text" id="edit-sch-label-${i}" value="${label}" placeholder="שם השיעור (למשל: תנ״ך מוגבר)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm mb-2 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                    <input type="text" id="edit-sch-groups-${i}" value="${groups}" placeholder="קבוצות משויכות (מופרדות בפסיק)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        window.saveSchedule = function() {
+            const day = document.getElementById('manage-schedule-day').value;
+            if(!globalData.schedule.labels[day]) globalData.schedule.labels[day] = {};
+            if(!globalData.schedule.groups[day]) globalData.schedule.groups[day] = {};
+            
+            for(let i=1; i<=8; i++) {
+                const label = document.getElementById(`edit-sch-label-${i}`).value.trim();
+                const groupsStr = document.getElementById(`edit-sch-groups-${i}`).value.trim();
+                
+                if(label) {
+                    globalData.schedule.labels[day][i] = label;
+                    globalData.schedule.groups[day][i] = groupsStr ? groupsStr.split(',').map(s=>s.trim()).filter(s=>s) : [];
+                } else {
+                    delete globalData.schedule.labels[day][i];
+                    delete globalData.schedule.groups[day][i];
+                }
+            }
+            saveToCloud();
+            showToast("המערכת נשמרה בענן!");
         }
 
         function renderAttendanceList() {
-            studentsContainer.innerHTML = '';
+            elements.studentsContainer.innerHTML = '';
             if (!globalData.students) return;
-            
-            const filtered = currentGroup.startsWith("כל הכיתה") 
-                ? globalData.students 
-                : globalData.students.filter(s => s.groups.includes(currentGroup));
-            
-            studentCount.textContent = `${filtered.length} תלמידים`;
-            if (filtered.length === 0) {
-                studentsContainer.innerHTML = '<div class="p-8 text-center text-slate-400 font-medium">אין תלמידים בקבוצה זו.</div>';
-                return;
-            }
+            const filtered = currentGroup.startsWith("כל הכיתה") ? globalData.students : globalData.students.filter(s => s.groups && s.groups.includes(currentGroup));
+            elements.studentCount.textContent = `${filtered.length} תלמידים`;
+            if (filtered.length === 0) return elements.studentsContainer.innerHTML = '<div class="p-4 text-center">אין תלמידים בקבוצה זו.</div>';
 
             const recordKey = `${currentDate}_${currentLesson}`;
             if (!globalData.attendance[recordKey]) globalData.attendance[recordKey] = {};
@@ -518,248 +510,103 @@
                 const hasAlert = noteObj && noteObj.isAlert && noteObj.text.trim() !== "";
                 
                 const div = document.createElement('div');
-                div.className = "flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 hover:bg-slate-50 transition-colors gap-3 border-b border-slate-50 last:border-0";
-                
+                div.className = "flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 gap-3 border-b border-slate-100";
                 div.innerHTML = `
                     <div class="flex items-start gap-3 flex-1 w-full">
-                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold shrink-0 shadow-inner">${student.first.charAt(0)}</div>
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold shrink-0">${student.first.charAt(0)}</div>
                         <div class="flex-1">
-                            <div class="font-bold text-slate-800 text-base">${student.name}</div>
-                            ${hasAlert ? `<div class="text-[11px] font-bold text-rose-600 bg-rose-50 border border-rose-100 inline-flex items-center gap-1 px-2 py-0.5 rounded-md mt-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>${noteObj.text}</div>` : ''}
+                            <div class="font-bold">${student.name}</div>
+                            ${hasAlert ? `<div class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 rounded-md mt-1">${noteObj.text}</div>` : ''}
                         </div>
-                        <button onclick="openStudentNoteModal(${student.id})" class="mt-1 text-slate-400 hover:text-indigo-600 bg-slate-100 hover:bg-indigo-50 p-2 rounded-full transition-colors flex-shrink-0" title="תיק אישי / הערות">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        </button>
+                        <button onclick="openStudentNoteModal(${student.id})" class="mt-1 bg-slate-100 p-2 rounded-full text-slate-500">ℹ️</button>
                     </div>
-                    <div class="flex bg-slate-100 rounded-xl p-1 gap-1 w-full sm:w-[260px] shrink-0 shadow-inner">
-                        <button onclick="setStatus(${student.id}, 'present')" class="flex-1 py-2 px-2 text-sm font-bold rounded-lg transition-all ${status === 'present' ? 'bg-white shadow-sm text-emerald-600 ring-1 ring-emerald-200' : 'text-slate-500 hover:bg-slate-200'}">נוכח</button>
-                        <button onclick="setStatus(${student.id}, 'late')" class="flex-1 py-2 px-2 text-sm font-bold rounded-lg transition-all ${status === 'late' ? 'bg-white shadow-sm text-amber-600 ring-1 ring-amber-200' : 'text-slate-500 hover:bg-slate-200'}">איחר</button>
-                        <button onclick="setStatus(${student.id}, 'absent')" class="flex-1 py-2 px-2 text-sm font-bold rounded-lg transition-all ${status === 'absent' ? 'bg-white shadow-sm text-rose-600 ring-1 ring-rose-200' : 'text-slate-500 hover:bg-slate-200'}">נעדר</button>
+                    <div class="flex bg-slate-100 rounded-xl p-1 w-full sm:w-[260px] shrink-0">
+                        <button onclick="setStatus(${student.id}, 'present')" class="flex-1 py-2 text-sm font-bold rounded-lg ${status === 'present' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500'}">נוכח</button>
+                        <button onclick="setStatus(${student.id}, 'late')" class="flex-1 py-2 text-sm font-bold rounded-lg ${status === 'late' ? 'bg-white text-amber-600 shadow-sm' : 'text-slate-500'}">איחר</button>
+                        <button onclick="setStatus(${student.id}, 'absent')" class="flex-1 py-2 text-sm font-bold rounded-lg ${status === 'absent' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-500'}">נעדר</button>
                     </div>
                 `;
-                studentsContainer.appendChild(div);
+                elements.studentsContainer.appendChild(div);
             });
         }
 
         window.setStatus = function(studentId, status) {
             const recordKey = `${currentDate}_${currentLesson}`;
             if (!globalData.attendance[recordKey]) globalData.attendance[recordKey] = {};
-            if (globalData.attendance[recordKey][studentId] === status) {
-                delete globalData.attendance[recordKey][studentId];
-            } else {
-                globalData.attendance[recordKey][studentId] = status;
-            }
-            renderAttendanceList();
-            saveToCloud(); // שומר אוטומטית לענן בכל לחיצה
+            globalData.attendance[recordKey][studentId] = (globalData.attendance[recordKey][studentId] === status) ? null : status;
+            renderAttendanceList(); saveToCloud();
         };
 
         window.openStudentNoteModal = function(studentId) {
             selectedStudentForModal = globalData.students.find(s => s.id === studentId);
+            if (!selectedStudentForModal.groups) selectedStudentForModal.groups = [];
             document.getElementById('modal-student-name').textContent = selectedStudentForModal.name + " - תיק אישי";
-            
             const existing = globalData.notes[studentId] || { text: "", isAlert: false };
             document.getElementById('student-note-input').value = existing.text;
             document.getElementById('student-note-alert').checked = existing.isAlert;
-            
-            renderStudentGroupsModal();
-            openModal('modal-student');
+            renderStudentGroupsModal(); openModal('modal-student');
         }
 
         window.renderStudentGroupsModal = function() {
             if(!selectedStudentForModal) return;
-            const container = document.getElementById('student-groups-container');
-            container.innerHTML = '';
-            
+            const container = document.getElementById('student-groups-container'); container.innerHTML = '';
             selectedStudentForModal.groups.sort().forEach(g => {
-                const chip = document.createElement('div');
-                chip.className = "bg-white border border-indigo-200 text-indigo-700 text-xs font-bold px-2 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm";
-                chip.innerHTML = `
-                    <span>${g}</span>
-                    <button onclick="removeStudentGroup('${g}')" class="text-indigo-400 hover:text-rose-500 transition-colors p-0.5 bg-indigo-50 hover:bg-rose-50 rounded-md" title="הסר קבוצה">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-                `;
+                const chip = document.createElement('div'); chip.className = "bg-white border border-indigo-200 text-indigo-700 text-xs px-2 py-1 rounded flex items-center gap-1";
+                chip.innerHTML = `<span>${g}</span><button onclick="removeStudentGroup('${g}')" class="text-rose-500 ml-1 font-bold">X</button>`;
                 container.appendChild(chip);
             });
-
-            const sel = document.getElementById('add-group-select');
-            sel.innerHTML = '<option value="">-- בחר קבוצה להוספה --</option>';
-            const allGroups = getAllPossibleGroups();
-            allGroups.forEach(g => {
-                if(!selectedStudentForModal.groups.includes(g) && !g.startsWith("כל הכיתה")) {
-                    const opt = document.createElement('option');
-                    opt.value = g;
-                    opt.textContent = g;
-                    sel.appendChild(opt);
-                }
-            });
+            const sel = document.getElementById('add-group-select'); sel.innerHTML = '<option value="">-- בחר קבוצה --</option>';
+            getAllPossibleGroups().forEach(g => { if(!selectedStudentForModal.groups.includes(g) && !g.startsWith("כל הכיתה")) sel.insertAdjacentHTML('beforeend', `<option value="${g}">${g}</option>`); });
         }
 
-        window.removeStudentGroup = function(group) {
-            if(!selectedStudentForModal) return;
-            selectedStudentForModal.groups = selectedStudentForModal.groups.filter(g => g !== group);
-            updateStudentInGlobalData();
-        }
-
-        window.addStudentGroup = function() {
-            const sel = document.getElementById('add-group-select');
-            if(!sel.value || !selectedStudentForModal) return;
-            if(!selectedStudentForModal.groups.includes(sel.value)) {
-                selectedStudentForModal.groups.push(sel.value);
-                updateStudentInGlobalData();
-            }
-        }
-
-        window.createNewStudentGroup = function() {
-            const inp = document.getElementById('new-group-input');
-            const val = inp.value.trim();
-            if(!val || !selectedStudentForModal) return;
-            if(!selectedStudentForModal.groups.includes(val)) {
-                selectedStudentForModal.groups.push(val);
-                inp.value = '';
-                updateStudentInGlobalData();
-            }
-        }
-
-        function updateStudentInGlobalData() {
-            const idx = globalData.students.findIndex(s => s.id === selectedStudentForModal.id);
-            if(idx !== -1) {
-                globalData.students[idx] = selectedStudentForModal;
-                saveToCloud();
-                renderStudentGroupsModal();
-                updateScheduleUI(); 
-            }
-        }
+        window.removeStudentGroup = function(group) { selectedStudentForModal.groups = selectedStudentForModal.groups.filter(g => g !== group); updateStudentInGlobalData(); }
+        window.addStudentGroup = function() { const v = document.getElementById('add-group-select').value; if(v && !selectedStudentForModal.groups.includes(v)) { selectedStudentForModal.groups.push(v); updateStudentInGlobalData(); } }
+        window.createNewStudentGroup = function() { const v = document.getElementById('new-group-input').value.trim(); if(v && !selectedStudentForModal.groups.includes(v)) { selectedStudentForModal.groups.push(v); document.getElementById('new-group-input').value=''; updateStudentInGlobalData(); } }
+        function updateStudentInGlobalData() { const idx = globalData.students.findIndex(s => s.id === selectedStudentForModal.id); if(idx !== -1) { globalData.students[idx] = selectedStudentForModal; saveToCloud(); renderStudentGroupsModal(); updateScheduleUI(); } }
 
         window.saveStudentNote = function() {
-            if(!selectedStudentForModal) return;
-            const text = document.getElementById('student-note-input').value;
-            const isAlert = document.getElementById('student-note-alert').checked;
-            
-            globalData.notes[selectedStudentForModal.id] = { text, isAlert };
-            saveToCloud();
-            closeModal('modal-student');
-            renderAttendanceList();
-            showToast("נשמר בתיק האישי בענן!");
+            globalData.notes[selectedStudentForModal.id] = { text: document.getElementById('student-note-input').value, isAlert: document.getElementById('student-note-alert').checked };
+            saveToCloud(); closeModal('modal-student'); renderAttendanceList(); showToast("נשמר בתיק האישי!");
         }
 
         function populateStudentSelectForRequests() {
-            const sel = document.getElementById('request-student-select');
-            sel.innerHTML = '<option value="">-- בחר תלמיד/ה --</option>';
-            if (!globalData.students) return;
-            globalData.students.forEach(s => {
-                const opt = document.createElement('option');
-                opt.value = s.id;
-                opt.textContent = s.name;
-                sel.appendChild(opt);
-            });
+            const sel = document.getElementById('request-student-select'); sel.innerHTML = '<option value="">-- בחר תלמיד/ה --</option>';
+            if (globalData.students) globalData.students.forEach(s => sel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}</option>`));
         }
 
-        window.openRequestModal = function() {
-            document.getElementById('request-student-select').value = "";
-            document.getElementById('request-text-input').value = "";
-            openModal('modal-request');
-        }
-
+        window.openRequestModal = function() { document.getElementById('request-student-select').value = ""; document.getElementById('request-text-input').value = ""; openModal('modal-request'); }
         window.saveNewRequest = function() {
-            const studentId = document.getElementById('request-student-select').value;
-            const text = document.getElementById('request-text-input').value;
-            if(!studentId || !text.trim()) {
-                alert("יש לבחור תלמיד ולהזין תוכן");
-                return;
-            }
-            
-            globalData.requests.push({
-                id: Date.now().toString(),
-                studentId: parseInt(studentId),
-                text: text.trim(),
-                status: 'open',
-                date: new Date().toLocaleDateString('he-IL')
-            });
-            
-            saveToCloud();
-            closeModal('modal-request');
-            renderRequests();
-            showToast("משימה נוספה למעקב בענן!");
+            const studentId = document.getElementById('request-student-select').value, text = document.getElementById('request-text-input').value;
+            if(!studentId || !text.trim()) return alert("חסרים פרטים");
+            globalData.requests.push({ id: Date.now().toString(), studentId: parseInt(studentId), text: text.trim(), status: 'open', date: new Date().toLocaleDateString('he-IL') });
+            saveToCloud(); closeModal('modal-request'); renderRequests(); showToast("משימה נוספה!");
         }
 
-        window.toggleRequestStatus = function(reqId) {
-            const req = globalData.requests.find(r => r.id === reqId);
-            if(req) {
-                req.status = req.status === 'open' ? 'closed' : 'open';
-                saveToCloud();
-                renderRequests();
-            }
-        }
-
+        window.toggleRequestStatus = function(reqId) { const req = globalData.requests.find(r => r.id === reqId); if(req) { req.status = req.status === 'open' ? 'closed' : 'open'; saveToCloud(); renderRequests(); } }
+        
         function renderRequests() {
-            requestsContainer.innerHTML = '';
-            if(!globalData.requests || globalData.requests.length === 0) {
-                requestsContainer.innerHTML = '<div class="p-8 text-center text-slate-400 font-medium bg-white rounded-2xl border border-slate-100 shadow-sm">אין פניות או משימות פתוחות. איזה כיף! 🎉</div>';
-                return;
-            }
-
-            const sorted = [...globalData.requests].sort((a,b) => {
-                if(a.status !== b.status) return a.status === 'open' ? -1 : 1;
-                return b.id.localeCompare(a.id);
-            });
-
-            sorted.forEach(req => {
-                const student = globalData.students ? globalData.students.find(s => s.id === req.studentId) : null;
-                const isOpen = req.status === 'open';
-                
-                const div = document.createElement('div');
-                div.className = `p-4 rounded-2xl shadow-sm border transition-all flex items-start gap-4 ${isOpen ? 'bg-white border-slate-200' : 'bg-slate-50 border-slate-100 opacity-60'}`;
-                
-                div.innerHTML = `
-                    <button onclick="toggleRequestStatus('${req.id}')" class="mt-1 shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${isOpen ? 'border-slate-300 hover:border-indigo-500 bg-white' : 'border-emerald-500 bg-emerald-500 text-white shadow-inner'}">
-                        ${isOpen ? '' : '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'}
-                    </button>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-1">
-                            <span class="font-bold text-slate-800 ${!isOpen && 'line-through decoration-slate-400'}">${student ? student.name : 'תלמיד נמחק'}</span>
-                            <span class="text-[10px] text-slate-500 font-bold bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">${req.date}</span>
-                        </div>
-                        <p class="text-sm text-slate-600 ${!isOpen && 'line-through'}">${req.text}</p>
-                    </div>
-                `;
-                requestsContainer.appendChild(div);
+            const container = elements.requestsContainer; container.innerHTML = '';
+            if(!globalData.requests || globalData.requests.length === 0) return container.innerHTML = '<div class="p-4 text-center">אין פניות פתוחות.</div>';
+            [...globalData.requests].sort((a,b) => (a.status === 'open' ? -1 : 1)).forEach(req => {
+                const student = globalData.students.find(s => s.id === req.studentId), isOpen = req.status === 'open';
+                const div = document.createElement('div'); div.className = `p-4 rounded-xl border flex gap-3 ${isOpen ? 'bg-white' : 'bg-slate-50 opacity-60'}`;
+                div.innerHTML = `<button onclick="toggleRequestStatus('${req.id}')" class="w-6 h-6 rounded-md border-2 ${isOpen ? 'bg-white' : 'bg-emerald-500'}"></button>
+                    <div><div class="font-bold">${student ? student.name : ''} - ${req.date}</div><p class="text-sm">${req.text}</p></div>`;
+                container.appendChild(div);
             });
         }
 
         function copyReport() {
             if (!globalData.students) return;
-            const filtered = currentGroup.startsWith("כל הכיתה") ? globalData.students : globalData.students.filter(s => s.groups.includes(currentGroup));
-            const records = globalData.attendance[`${currentDate}_${currentLesson}`] || {};
-            
-            const present = [], late = [], absent = [], unknown = [];
-            filtered.forEach(s => {
-                const st = records[s.id];
-                if (st === 'present') present.push(s.name);
-                else if (st === 'late') late.push(s.name);
-                else if (st === 'absent') absent.push(s.name);
-                else unknown.push(s.name);
-            });
-
-            const dateObj = new Date(currentDate);
-            let report = `📋 דו"ח נוכחות: ${currentGroup}\n📅 תאריך: ${dateObj.toLocaleDateString('he-IL')} | שיעור ${currentLesson}\n-----------------------------------\n`;
-            
-            if (present.length > 0) report += `✅ נוכחים (${present.length}):\n${present.join(', ')}\n\n`;
-            if (late.length > 0) report += `⏳ איחורים (${late.length}):\n${late.join(', ')}\n\n`;
-            if (absent.length > 0) report += `❌ נעדרים (${absent.length}):\n${absent.join(', ')}\n\n`;
-            if (unknown.length > 0) report += `❓ לא הוזן סטטוס (${unknown.length}):\n${unknown.join(', ')}\n`;
-
-            const textarea = document.createElement('textarea');
-            textarea.value = report.trim();
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                showToast("הדו\"ח הועתק! אפשר להדביק בוואטסאפ.");
-            } catch (err) {}
-            document.body.removeChild(textarea);
+            const filtered = currentGroup.startsWith("כל הכיתה") ? globalData.students : globalData.students.filter(s => s.groups && s.groups.includes(currentGroup));
+            const records = globalData.attendance[`${currentDate}_${currentLesson}`] || {}, present = [], late = [], absent = [], unknown = [];
+            filtered.forEach(s => { const st = records[s.id]; if (st === 'present') present.push(s.name); else if (st === 'late') late.push(s.name); else if (st === 'absent') absent.push(s.name); else unknown.push(s.name); });
+            let report = `📋 נוכחות: ${currentGroup}\n📅 ${new Date(currentDate).toLocaleDateString('he-IL')} | שיעור ${currentLesson}\n---\n`;
+            if (present.length) report += `✅ נוכחים: ${present.join(', ')}\n`; if (late.length) report += `⏳ איחורים: ${late.join(', ')}\n`;
+            if (absent.length) report += `❌ נעדרים: ${absent.join(', ')}\n`;
+            const textarea = document.createElement('textarea'); textarea.value = report.trim(); document.body.appendChild(textarea); textarea.select();
+            try { document.execCommand('copy'); showToast("הדו\"ח הועתק!"); } catch (err) {} document.body.removeChild(textarea);
         }
-
         window.onload = init;
     </script>
 </body>
